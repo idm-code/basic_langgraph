@@ -1,42 +1,35 @@
-# LangGraph Tutorial - Primer Grafo
+# LangGraph Tutorial - Ejemplos Básicos
 
-Este proyecto contiene un tutorial introductorio para crear grafos con LangGraph, una biblioteca para construir aplicaciones con estado usando grafos dirigidos.
+Este proyecto contiene tutoriales introductorios para crear grafos con LangGraph, una biblioteca para construir aplicaciones con estado usando grafos dirigidos.
 
 ## 📋 Descripción
 
-El archivo [01_langgraph_primer_grafo.py](01_langgraph_primer_grafo.py) implementa un grafo básico de dos nodos que demuestra los conceptos fundamentales de LangGraph:
+Incluye dos ejemplos principales:
 
-- **Estado compartido**: Uso de `TypedDict` para definir el estado que fluye entre nodos
-- **Nodos**: Funciones que reciben y modifican el estado
-- **Flujo**: Definición de la secuencia de ejecución entre nodos
+- [`01_langgraph_primer_grafo.py`](01_langgraph_primer_grafo.py): Grafo básico de dos nodos que demuestra los conceptos fundamentales de LangGraph.
+- [`02_langgraph_memoria_conversacional.py`](02_langgraph_memoria_conversacional.py): Grafo con memoria conversacional que simula un chat interactivo con historial.
 
-## 🏗️ Estructura del Grafo
+---
+
+## 1️⃣ Primer Grafo
+
+### Estructura
 
 ```
 [Nodo A] → [Nodo B] → [END]
 ```
 
-1. **Nodo A**: Genera un mensaje inicial y lo almacena en el estado
-2. **Nodo B**: Procesa el mensaje del Nodo A y genera una respuesta
-3. **END**: Termina la ejecución del grafo
+- **Nodo A**: Genera un mensaje inicial y lo almacena en el estado.
+- **Nodo B**: Procesa el mensaje del Nodo A y genera una respuesta.
+- **END**: Termina la ejecución del grafo.
 
-## 🔧 Instalación
-
-Instala las dependencias necesarias:
-
-```bash
-pip install langgraph typing-extensions
-```
-
-## 🚀 Ejecución
-
-Ejecuta el script principal:
+### Ejecución
 
 ```bash
 python 01_langgraph_primer_grafo.py
 ```
 
-### Salida esperada:
+#### Salida esperada
 
 ```
 === Ejecutando el grafo ===
@@ -45,43 +38,81 @@ python 01_langgraph_primer_grafo.py
 📌 Estado final: {'mensaje': 'Hola desde el nodo A', 'respuesta': 'Hola desde el nodo A → Procesado en nodo B'}
 ```
 
+---
+
+## 2️⃣ Memoria Conversacional
+
+### Estructura
+
+```
+[input] ⟶ [llm]
+   ↑         |
+   └─────────┘
+```
+
+- **input**: Recibe el mensaje del usuario y lo añade al historial.
+- **llm**: Simula la respuesta de un modelo LLM y la añade al historial.
+- El flujo es cíclico hasta que el usuario escribe `exit`.
+
+### Ejecución
+
+```bash
+python 02_langgraph_memoria_conversacional.py
+```
+
+#### Salida esperada
+
+```
+=== Chat con memoria (LangGraph) ===
+(Escribe 'exit' para salir)
+👤 Usuario: hola
+🤖 LLM responde a: 'hola' teniendo en cuenta el historial (1 turnos).
+👤 Usuario: ¿cómo estás?
+🤖 LLM responde a: '¿cómo estás?' teniendo en cuenta el historial (3 turnos).
+...
+👤 Usuario: exit
+👋 Conversación finalizada.
+📌 Historial final: [...]
+```
+
+---
+
+## 🔧 Instalación
+
+Instala las dependencias necesarias:
+
+```bash
+pip install -r requirements.txt
+```
+
+El archivo [`requirements.txt`](requirements.txt) contiene:
+
+```
+langgraph
+```
+
+Si usas tipado fuerte en Python <3.8, instala también `typing-extensions`:
+
+```bash
+pip install typing-extensions
+```
+
+---
+
 ## 📚 Conceptos Clave
 
-### Estado (TypedDict)
-```python
-class Estado(TypedDict):
-    mensaje: str      # Campo para almacenar el mensaje del nodo A
-    respuesta: str    # Campo para almacenar la respuesta procesada del nodo B
-```
+- **Estado compartido**: Uso de `TypedDict` o `dict` para definir el estado que fluye entre nodos.
+- **Nodos**: Funciones que reciben y modifican el estado.
+- **Flujo**: Definición de la secuencia de ejecución entre nodos, incluyendo ciclos para conversación.
 
-### Nodos
-Los nodos son funciones que:
-- Reciben el estado actual como parámetro
-- Modifican el estado según su lógica
-- Retornan el estado modificado
-
-### Construcción del Grafo
-```python
-workflow = StateGraph(Estado)
-workflow.add_node("A", nodo_a)
-workflow.add_node("B", nodo_b)
-workflow.set_entry_point("A")
-workflow.add_edge("A", "B")
-workflow.add_edge("B", END)
-```
-
-## 🎯 Objetivos de Aprendizaje
-
-Este ejemplo enseña:
-- ✅ Cómo definir un estado tipado con `TypedDict`
-- ✅ Cómo crear nodos que modifiquen el estado
-- ✅ Cómo construir un flujo secuencial básico
-- ✅ Cómo compilar y ejecutar un grafo
+---
 
 ## 🔗 Recursos
 
 - [Documentación oficial de LangGraph](https://python.langchain.com/docs/langgraph)
-- [Repositorio de LangGraph](https://github.com/idm-code/basic_langgraph)
+- [Repositorio de LangGraph](https://github.com/langchain-ai/langgraph)
+
+---
 
 ## 📝 Licencia
 
