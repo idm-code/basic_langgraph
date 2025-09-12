@@ -4,10 +4,11 @@ Este proyecto contiene tutoriales introductorios para crear grafos con LangGraph
 
 ## 📋 Descripción
 
-Incluye dos ejemplos principales:
+Incluye tres ejemplos principales:
 
 - [`01_langgraph_primer_grafo.py`](01_langgraph_primer_grafo.py): Grafo básico de dos nodos que demuestra los conceptos fundamentales de LangGraph.
 - [`02_langgraph_memoria_conversacional.py`](02_langgraph_memoria_conversacional.py): Grafo con memoria conversacional que simula un chat interactivo con historial.
+- [`03_langgraph_condicionales_branching.py`](03_langgraph_condicionales_branching.py): Grafo con branching condicional real gestionado por LangGraph.
 
 ---
 
@@ -77,6 +78,45 @@ python 02_langgraph_memoria_conversacional.py
 
 ---
 
+## 3️⃣ Branching condicional (condiciones y rutas)
+
+### Estructura
+
+```
+[llm] ──┬──> [finanzas] ──┐
+        ├──> [clima]    ──┤→ [END]
+        └──> [general]  ──┘
+```
+
+- **llm**: Nodo de decisión que analiza el input y decide la ruta.
+- **finanzas/clima/general**: Nodos que responden según la ruta elegida.
+- **END**: Fin del grafo.
+
+### Ejecución
+
+```bash
+python 03_langgraph_condicionales_branching.py
+```
+
+#### Salida esperada
+
+```
+=== Condicionales en LangGraph ===
+👤 Usuario: ¿Cuál es el precio del oro?
+🤖 El agente detecta que preguntas por precios. Te redirige a la ruta de 'consultas financieras'.
+📈 Respuesta del módulo de finanzas: el precio de BTC está en 42k (ejemplo).
+
+👤 Usuario: ¿Cómo está el clima?
+🤖 El agente detecta que preguntas por el clima. Te redirige a la ruta de 'consultas meteorológicas'.
+🌦️ Respuesta del módulo de clima: hoy está soleado con 25°C (ejemplo).
+
+👤 Usuario: John
+🤖 El agente no entiende bien la intención. Te responde de forma genérica.
+💬 Respuesta general: gracias por tu pregunta.
+```
+
+---
+
 ## 🔧 Instalación
 
 Instala las dependencias necesarias:
@@ -89,12 +129,7 @@ El archivo [`requirements.txt`](requirements.txt) contiene:
 
 ```
 langgraph
-```
-
-Si usas tipado fuerte en Python <3.8, instala también `typing-extensions`:
-
-```bash
-pip install typing-extensions
+typing-extensions
 ```
 
 ---
@@ -103,7 +138,7 @@ pip install typing-extensions
 
 - **Estado compartido**: Uso de `TypedDict` o `dict` para definir el estado que fluye entre nodos.
 - **Nodos**: Funciones que reciben y modifican el estado.
-- **Flujo**: Definición de la secuencia de ejecución entre nodos, incluyendo ciclos para conversación.
+- **Flujo**: Definición de la secuencia de ejecución entre nodos, incluyendo ciclos y branching condicional.
 
 ---
 
