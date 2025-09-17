@@ -4,11 +4,12 @@ Este proyecto contiene tutoriales introductorios para crear grafos con LangGraph
 
 ## 📋 Descripción
 
-Incluye tres ejemplos principales:
+Incluye cuatro ejemplos principales:
 
 - [`01_langgraph_primer_grafo.py`](01_langgraph_primer_grafo.py): Grafo básico de dos nodos que demuestra los conceptos fundamentales de LangGraph.
 - [`02_langgraph_memoria_conversacional.py`](02_langgraph_memoria_conversacional.py): Grafo con memoria conversacional que simula un chat interactivo con historial.
 - [`03_langgraph_condicionales_branching.py`](03_langgraph_condicionales_branching.py): Grafo con branching condicional real gestionado por LangGraph.
+- [`04_langgraph_memoria_condicionales.py`](04_langgraph_memoria_condicionales.py): Grafo que combina memoria (historial) y branching condicional.
 
 ---
 
@@ -117,6 +118,39 @@ python 03_langgraph_condicionales_branching.py
 
 ---
 
+## 4️⃣ Memoria + Condicionales
+
+### Estructura
+
+```
+[llm (memoria+decisión)] ──┬──> [finanzas] ──┐
+                           ├──> [clima]    ──┤→ [END]
+                           └──> [general]  ──┘
+```
+
+- **llm**: Nodo que añade el input al historial y decide la ruta.
+- **finanzas/clima/general**: Nodos que responden según la ruta elegida y añaden la respuesta al historial.
+- **END**: Fin del grafo.
+
+### Ejecución
+
+```bash
+python 04_langgraph_memoria_condicionales.py
+```
+
+#### Salida esperada
+
+```
+=== LangGraph: memoria + condicionales ===
+👤 Usuario: Mike
+🤖 El agente no entiende bien la intención. Te responde de forma genérica.
+💬 Respuesta general: gracias por tu pregunta.
+```
+
+El historial final contendrá tanto los mensajes del usuario como las respuestas del agente, demostrando cómo se puede mantener contexto y lógica condicional en un grafo.
+
+---
+
 ## 🔧 Instalación
 
 Instala las dependencias necesarias:
@@ -138,7 +172,7 @@ typing-extensions
 
 - **Estado compartido**: Uso de `TypedDict` o `dict` para definir el estado que fluye entre nodos.
 - **Nodos**: Funciones que reciben y modifican el estado.
-- **Flujo**: Definición de la secuencia de ejecución entre nodos, incluyendo ciclos y branching condicional.
+- **Flujo**: Definición de la secuencia de ejecución entre nodos, incluyendo ciclos, memoria y branching condicional.
 
 ---
 
