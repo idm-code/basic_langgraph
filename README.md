@@ -4,13 +4,14 @@ Este proyecto contiene tutoriales introductorios para crear grafos con LangGraph
 
 ## 📋 Descripción
 
-Incluye cinco ejemplos principales:
+Incluye seis ejemplos principales:
 
 - [`01_langgraph_primer_grafo.py`](01_langgraph_primer_grafo.py): Grafo básico de dos nodos que demuestra los conceptos fundamentales de LangGraph.
 - [`02_langgraph_memoria_conversacional.py`](02_langgraph_memoria_conversacional.py): Grafo con memoria conversacional que simula un chat interactivo con historial.
 - [`03_langgraph_condicionales_branching.py`](03_langgraph_condicionales_branching.py): Grafo con branching condicional real gestionado por LangGraph.
 - [`04_langgraph_memoria_condicionales.py`](04_langgraph_memoria_condicionales.py): Grafo que combina memoria (historial) y branching condicional.
 - [`05_langgraph_memoria_largo_plazo.py`](05_langgraph_memoria_largo_plazo.py): Grafo con memoria persistente en SQLite y branching condicional.
+- [`06_langgraph_memoria_hibrida.py`](06_langgraph_memoria_hibrida.py): Grafo con memoria híbrida (SQLite + FAISS) y búsqueda semántica.
 
 ---
 
@@ -190,6 +191,46 @@ La base de datos `memoria.db` almacena todo el historial de la conversación, pe
 
 ---
 
+## 6️⃣ Memoria híbrida (SQLite + FAISS)
+
+### Estructura
+
+```
+[input] → [llm (búsqueda semántica)] ──┬──> [finanzas] ──┐
+                                      ├──> [clima]    ──┤→ [memoria] → [END]
+                                      └──> [general]  ──┘
+```
+
+- **input**: Nodo que guarda el input en la base y lo indexa en FAISS.
+- **llm**: Nodo que realiza búsqueda semántica en la memoria vectorial y decide la ruta.
+- **finanzas/clima/general**: Nodos que responden según la ruta elegida y guardan la respuesta en la base.
+- **memoria**: Nodo que muestra el historial completo guardado en la base.
+- **END**: Fin del grafo.
+
+### Ejecución
+
+```bash
+python 06_langgraph_memoria_hibrida.py
+```
+
+#### Salida esperada
+
+```
+=== LangGraph: Memoria híbrida (SQLite + FAISS) ===
+👤 Usuario: John Connor
+📈 Pregunta detectada: finanzas. Contexto: John Connor
+📊 Precio BTC: 42k (ejemplo).
+
+📜 Historial persistente (SQLite):
+1. usuario: John Connor
+2. agente: 📈 Pregunta detectada: finanzas. Contexto: John Connor
+3. agente: 📊 Precio BTC: 42k (ejemplo).
+```
+
+Este ejemplo combina memoria persistente (SQLite) y memoria semántica (FAISS + Sentence Transformers) para búsquedas contextuales.
+
+---
+
 ## 🔧 Instalación
 
 Instala las dependencias necesarias:
@@ -202,6 +243,9 @@ El archivo [`requirements.txt`](requirements.txt) contiene:
 
 ```
 langgraph
+sentence-transformers
+faiss-cpu
+numpy
 typing-extensions
 ```
 
@@ -211,8 +255,9 @@ typing-extensions
 
 - **Estado compartido**: Uso de `dict` para definir el estado que fluye entre nodos.
 - **Nodos**: Funciones que reciben y modifican el estado.
-- **Flujo**: Definición de la secuencia de ejecución entre nodos, incluyendo ciclos, memoria y branching condicional.
+- **Flujo**: Definición de la secuencia de ejecución entre nodos, incluyendo ciclos, memoria, búsqueda semántica y branching condicional.
 - **Persistencia**: Uso de SQLite para guardar el historial de la conversación.
+- **Memoria vectorial**: Uso de FAISS y Sentence Transformers para búsquedas semánticas.
 
 ---
 
